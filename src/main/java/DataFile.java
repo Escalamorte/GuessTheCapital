@@ -3,23 +3,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Random;
+import java.util.Scanner;
 
-public class DataFile {
+public class DataFile extends Thread {
 
-    private String fileName = "data.txt";
-    private String dir = System.getProperty("user.dir");
-    private String fullName = dir + "\\src\\main\\resources" + File.separator + fileName;
-    private File data = new File(fullName);
+    private static String fileName = "data.txt";
+    private static String dir = System.getProperty("user.dir");
+    private static String fullName = dir + "\\src\\main\\resources" + File.separator + fileName;
+    private static File data = new File(fullName);
 
     private void createFile() {
         if (!data.exists()){
             try{
                 if(data.createNewFile()){
                     System.out.println("New file created");
-                    getDate();
+                    setData();
                 } else {
                     System.out.println("Error while file creating");
                 }
@@ -31,31 +31,88 @@ public class DataFile {
         }
     }
 
-    void getDate() {
+    private void setData() {
         String countries;
-        if (data.exists()) {
-            try {
-                FileWriter fw = new FileWriter(fullName);
-                Document doc = Jsoup.connect("http://ostranah.ru/_lists/capitals.php").get();
+        try {
+            FileReader fr = new FileReader(fullName);
+            Scanner scan = new Scanner(fr);
 
-                for (Element table : doc.select("table[id=sort-table]")){
-                    for ( Element row : table.select("tr:gt(0)")) {
-                        Elements tds = row.select("td:not(rowspan)");
-                        countries = tds.get(0).text() + ";" + tds.get(1).text();
-                        System.out.println(countries);
-                        fw.write(countries + "\n");
+            if (data.exists() && !scan.hasNextLine()) {
+                try {
+                    FileWriter fw = new FileWriter(fullName);
+                    Document doc = Jsoup.connect("http://ostranah.ru/_lists/capitals.php").get();
+
+                    for (Element table : doc.select("table[id=sort-table]")){
+                        for ( Element row : table.select("tr:gt(0)")) {
+                            Elements tds = row.select("td:not(rowspan)");
+                            countries = tds.get(0).text() + ";" + tds.get(1).text();
+                            System.out.println(countries);
+                            fw.write(countries + "\n");
+                        }
                     }
-                }
 
-                fw.close();
+                    fw.close();
+                } catch (IOException exp) {
+                    System.out.println("Check internet connection.\n" + exp.getMessage());
+                }
+            } else if (!data.exists()){
+                createFile();
+            } else {
+                System.out.println("File is ready for use");
+            }
+
+            fr.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private static int LineCount(){
+        int lineCount = 0;
+        try{
+            FileReader fr = new FileReader(fullName);
+            LineNumberReader lnr = new LineNumberReader(fr);
+
+            while (lnr.readLine() != null){
+                lineCount++;
+
+            }
+            fr.close();
+        } catch (IOException ex){
+            System.out.println(ex.getMessage());
+        }
+        System.out.println(lineCount);
+        return lineCount;
+    }
+
+    static String getCountry() {
+        String country = "";
+
+            try {
+                FileReader fr = new FileReader(fullName);
+                Scanner scan = new Scanner(fr);
+
+                Random random = new Random();
+                int lineNumber = random.nextInt(LineCount());
+
+                    for (int i = 0; i < lineNumber; i++) {
+                        country = scan.nextLine();
+                    }
+                System.out.println(country);
+                fr.close();
             } catch (IOException exp) {
                 System.out.println(exp.getMessage());
             }
-        } else createFile();
+
+        return country;
     }
+
+    public void run() {
+       new DataFile().setData();
+    }
+
 
     public static void main(String[] args) {
-       new DataFile().getDate();
+        DataFile.getCountry();
     }
-
 }
