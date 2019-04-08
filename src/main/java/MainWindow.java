@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Locale;
 
 public class MainWindow extends JDialog {
     private JPanel contentPane;
@@ -26,6 +27,7 @@ public class MainWindow extends JDialog {
 
         buttonOK.setText("Поехали!");
         buttonOK.addActionListener(e -> onOK());
+        contentPane.getInputContext().selectInputMethod(new Locale("ru", "RU"));
 
         buttonOK.addKeyListener(new KeyAdapter() {
             @Override
