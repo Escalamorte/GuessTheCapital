@@ -11,7 +11,10 @@ public class MainWindow extends JDialog {
     private JLabel globeTitleLabel;
     private JLabel guessedCountryLabel;
     private JLabel guessedCapitalLabel;
-    private char[] capital;
+    private JLabel lifeRemainingLabel;
+    private JLabel lifeRemainingField;
+    private String capital;
+    private int life = 5;
 
 
     private MainWindow() {
@@ -23,6 +26,7 @@ public class MainWindow extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        lifeRemainingLabel.setText("Попыток отсталось");
 
 
         buttonOK.setText("Поехали!");
@@ -33,6 +37,7 @@ public class MainWindow extends JDialog {
             @Override
             public void keyPressed(KeyEvent e) {
                 System.out.println(e.getKeyChar());
+                checkAnswer(e.getKeyChar());
             }
         });
     }
@@ -40,17 +45,38 @@ public class MainWindow extends JDialog {
     private void onOK() {
         String[] countryArr = DataFile.getCountry().split(";");
         String country = countryArr[0];
-        capital = countryArr[1].toCharArray();
+        capital = countryArr[1];
         guessedCountryLabel.setText(country);
         hideAnswer();
     }
 
+    private void checkAnswer(char ch) {
+        String answer = "";
+        char[] rightLetters = new char[capital.length()];
+        int i = 0;
+            while (i < capital.length()) {
+                rightLetters[i] = '_';
+                if(capital.charAt(i) == '-'){
+                    rightLetters[i] = '-';
+                }
+                i++;
+            }
+
+        for (char c : rightLetters) {
+            answer += (c + "");
+        }
+        guessedCapitalLabel.setText(answer);
+        //
+    }
+
     private void hideAnswer(){
         StringBuilder hide = new StringBuilder();
-        for (char c : capital) {
+        for (char c : capital.toCharArray()) {
             hide.append("_ ");
         }
         guessedCapitalLabel.setText(String.valueOf(hide));
+
+        lifeRemainingField.setText(String.valueOf(life));
     }
 
     public static void main(String[] args) {
