@@ -1,6 +1,5 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class MainWindow extends JDialog {
     private JPanel contentPane;
@@ -9,10 +8,14 @@ public class MainWindow extends JDialog {
     private JLabel countryTitleLabel;
     private JLabel capitalTitleLabel;
     private JLabel globeTitleLabel;
+    private JLabel guessedCountryLabel;
+    private JLabel guessedCapitalLabel;
+    private char[] capital;
 
-    public MainWindow() {
+
+    private MainWindow() {
+
         setTitle("Guess The Capital");
-        setLocation(200, 300);
         mainTitleLabel.setText("Угадай столицу!");
         countryTitleLabel.setText("Страна");
         capitalTitleLabel.setText("Столица");
@@ -20,22 +23,41 @@ public class MainWindow extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
+
+        buttonOK.setText("Поехали!");
+        buttonOK.addActionListener(e -> onOK());
+
+        buttonOK.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.out.println(e.getKeyChar());
             }
         });
     }
 
     private void onOK() {
-        // add your code here
-        dispose();
+        String[] countryArr = DataFile.getCountry().split(";");
+        String country = countryArr[0];
+        capital = countryArr[1].toCharArray();
+        guessedCountryLabel.setText(country);
+        hideAnswer();
+    }
+
+    private void hideAnswer(){
+        StringBuilder hide = new StringBuilder();
+        for (char c : capital) {
+            hide.append("_ ");
+        }
+        guessedCapitalLabel.setText(String.valueOf(hide));
     }
 
     public static void main(String[] args) {
         MainWindow dialog = new MainWindow();
         dialog.pack();
+        new DataFile().run();
         dialog.setVisible(true);
+        dialog.setLocationRelativeTo(null);
         System.exit(0);
     }
+
 }
