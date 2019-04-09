@@ -92,8 +92,8 @@ public class DataFile extends Thread {
                 Scanner scan = new Scanner(fr);
 
                 Random random = new Random();
-                int lineNumber = random.nextInt(LineCount());
-
+                int lineNumber = random.nextInt(LineCount()) + 1;
+                System.out.println(lineNumber);
                     for (int i = 0; i < lineNumber; i++) {
                         country = scan.nextLine();
                     }
