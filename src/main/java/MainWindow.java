@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.Locale;
 
 public class MainWindow extends JDialog {
@@ -49,7 +50,9 @@ public class MainWindow extends JDialog {
 
         lifeRemainingField.setText(String.valueOf(life));
 
-        guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()) + "\n" + capital.length() + " букв");
+        guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()));
+
+        setGlobalImage(country);
 
     }
 
@@ -88,7 +91,21 @@ public class MainWindow extends JDialog {
         if(!regame){
             ++life;
             rightAnswer();
+        }
+    }
 
+    private void setGlobalImage(String coun){
+        String flagDir = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\" + File.separator + coun + ".png";
+        String globeImage = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\" + File.separator + "globe.gif";
+        File file = new File(flagDir);
+
+        if (file.exists()) {
+            ImageIcon flag = new ImageIcon(new ImageIcon(flagDir).getImage());
+            globeTitleLabel.setIcon(flag);
+            System.out.println(file.exists());
+        } else {
+            ImageIcon globe = new ImageIcon(new ImageIcon(globeImage).getImage());
+            globeTitleLabel.setIcon(globe);
         }
     }
 
@@ -107,18 +124,15 @@ public class MainWindow extends JDialog {
 
     private void rightAnswer(){
         mainTitleLabel.setText("Правильно!");
-        timer = new Timer(0, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int sec = 50000;
-                while (sec > 0){
-                    sec--;
-                    System.out.println(sec);
-                }
-                timer.stop();
-                mainTitleLabel.setText("Угадай столицу!");
-                onOK();
+        timer = new Timer(0, e -> {
+            int sec = 50000;
+            while (sec > 0){
+                sec--;
+                System.out.println(sec);
             }
+            timer.stop();
+            mainTitleLabel.setText("Угадай столицу!");
+            onOK();
         });
         timer.start();
     }
