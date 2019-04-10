@@ -6,21 +6,14 @@ public class MainWindow extends JDialog {
 
     private JPanel contentPane;
     private JButton buttonOK;
-    private JLabel mainTitleLabel;
-    private JLabel countryTitleLabel;
-    private JLabel capitalTitleLabel;
-    private JLabel globeTitleLabel;
-    private JLabel guessedCountryLabel;
-    private JLabel guessedCapitalLabel;
-    private JLabel lifeRemainingLabel;
-    private JLabel lifeRemainingField;
+    private JLabel mainTitleLabel, countryTitleLabel, capitalTitleLabel, globeTitleLabel;
+    private JLabel guessedCountryLabel, guessedCapitalLabel, lifeRemainingLabel, lifeRemainingField;
     private String capital;
-    private int life;
-    private String answer = "";
+    private int life = 5;
     private char[] rightLetters;
+    private Timer timer;
 
-
-    MainWindow() {
+    private MainWindow() {
         setTitle("Guess The Capital");
         mainTitleLabel.setText("Угадай столицу!");
         countryTitleLabel.setText("Страна");
@@ -37,60 +30,97 @@ public class MainWindow extends JDialog {
         buttonOK.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                System.out.println("Pressed " + e.getKeyChar());
-                System.out.println("length is " + rightLetters.length);
                 checkAnswer(e.getKeyChar());
+                if (e.getKeyChar() == KeyEvent.VK_ENTER){
+                    onOK();
+                }
             }
         });
     }
 
-    void onOK() {
+    private void onOK() {
+
         String[] countryArr = DataFile.getCountry().split(";");
         String country = countryArr[0];
         capital = countryArr[1];
+
         rightLetters = new char[capital.length()];
         guessedCountryLabel.setText(country);
-        hideAnswer();
-        life = 5;
+
         lifeRemainingField.setText(String.valueOf(life));
+
+        guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()) + "\n" + capital.length() + " букв");
 
     }
 
     private void checkAnswer(char ch) {
-        if (life >= 1) {
-            if (capital.contains(ch + "")){
-                for (int j = 0; j < capital.length() ; j++) {
-                    if(capital.charAt(j) == ch) {
-                        rightLetters[j] = ch;
+        char[] alphabet = new char[]{'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'};
+        if (life > 0) {
+            for (char a : alphabet) {
+                if (String.valueOf(a).equalsIgnoreCase(String.valueOf(ch))) {
+                    if (capital.contains(ch + "") || capital.contains(Character.toUpperCase(ch) + "")) {
+                        for (int j = 0; j < capital.length(); j++) {
+                            if (capital.charAt(j) == ch || Character.toLowerCase(capital.charAt(j)) == ch) {
+                                rightLetters[j] = ch;
+                            }
+                        }
+                    } else {
+                        lifeRemainingField.setText(String.valueOf(--life));
+                        if (life == 0) {
+                            Regame.run();
+                        }
                     }
                 }
-            } else {
-                life--;
             }
         } else {
-            Regame.run("Проиграл");
+            Regame.run();
         }
 
-        guessedCapitalLabel.setText(String.valueOf(rightLetters));
-        lifeRemainingField.setText(String.valueOf(life));
+        guessedCapitalLabel.setText(String.valueOf(rightLetters).toUpperCase());
+
+        boolean regame = false;
+        for (char c : rightLetters) {
+            if (c == '*') {
+                regame = true;
+            }
+        }
+
+        if(!regame){
+            ++life;
+            rightAnswer();
+
+        }
     }
 
-    private void hideAnswer(){
-        StringBuilder answer = new StringBuilder();
-        char[] rightLetters = new char[capital.length()];
-        int i = 0;
-        while (i < capital.length()) {
-            rightLetters[i] = '_';
-            if(capital.charAt(i) == '-'){
-                rightLetters[i] = '-';
+    private char[] hideAnswer(){
+        rightLetters = new char[capital.length()];
+            for (int i = 0; i < capital.length() ; i++) {
+                rightLetters[i] = '*';
+                if(capital.charAt(i) == '-'){
+                    rightLetters[i] = '-';
+                } else if (capital.charAt(i) == ' '){
+                    rightLetters[i] = ' ';
+                }
             }
-            i++;
-        }
+        return rightLetters;
+    }
 
-        for (char c : rightLetters) {
-            answer.append(c + "");
-        }
-        guessedCapitalLabel.setText(answer.toString());
+    private void rightAnswer(){
+        mainTitleLabel.setText("Правильно!");
+        timer = new Timer(0, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int sec = 50000;
+                while (sec > 0){
+                    sec--;
+                    System.out.println(sec);
+                }
+                timer.stop();
+                mainTitleLabel.setText("Угадай столицу!");
+                onOK();
+            }
+        });
+        timer.start();
     }
 
     public static void main(String[] args) {

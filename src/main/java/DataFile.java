@@ -33,34 +33,36 @@ public class DataFile extends Thread {
     private void setData() {
         String countries;
         try {
-            FileReader fr = new FileReader(fullName);
-            Scanner scan = new Scanner(fr);
+            if (data.exists()) {
+                FileReader fr = new FileReader(fullName);
+                Scanner scan = new Scanner(fr);
 
-            if (data.exists() && !scan.hasNextLine()) {
-                try {
-                    FileWriter fw = new FileWriter(fullName);
-                    Document doc = Jsoup.connect("http://ostranah.ru/_lists/capitals.php").get();
+                if (!scan.hasNextLine()) {
+                    try {
+                        FileWriter fw = new FileWriter(fullName);
+                        Document doc = Jsoup.connect("http://ostranah.ru/_lists/capitals.php").get();
 
-                    for (Element table : doc.select("table[id=sort-table]")){
-                        for ( Element row : table.select("tr:gt(0)")) {
-                            Elements tds = row.select("td:not(rowspan)");
-                            countries = tds.get(0).text() + ";" + tds.get(1).text();
-                            System.out.println(countries);
-                            fw.write(countries + "\n");
+                        for (Element table : doc.select("table[id=sort-table]")) {
+                            for (Element row : table.select("tr:gt(0)")) {
+                                Elements tds = row.select("td:not(rowspan)");
+                                countries = tds.get(0).text() + ";" + tds.get(1).text();
+                                System.out.println(countries);
+                                fw.write(countries + "\n");
+                            }
                         }
+
+                        fw.close();
+                    } catch (IOException exp) {
+                        System.out.println("Check internet connection.\n" + exp.getMessage());
                     }
-
-                    fw.close();
-                } catch (IOException exp) {
-                    System.out.println("Check internet connection.\n" + exp.getMessage());
+                } else {
+                    System.out.println("File is ready for use");
                 }
-            } else if (!data.exists()){
-                createFile();
-            } else {
-                System.out.println("File is ready for use");
-            }
 
-            fr.close();
+                fr.close();
+            } else {
+                createFile();
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -80,7 +82,6 @@ public class DataFile extends Thread {
         } catch (IOException ex){
             System.out.println(ex.getMessage());
         }
-        System.out.println(lineCount);
         return lineCount;
     }
 

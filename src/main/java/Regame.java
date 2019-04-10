@@ -1,36 +1,23 @@
 import javax.swing.*;
-import java.awt.event.*;
 
-public class Regame extends JDialog {
+public class Regame extends JDialog{
     private JPanel contentPane;
-    private JButton buttonOK;
     private JButton buttonCancel;
     private JLabel imageLabel;
     private JLabel textLabel;
 
-    private Regame(String s) {
+    private Regame() {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
-        textLabel.setText(s);
+        getRootPane().setDefaultButton(buttonCancel);
+        textLabel.setText("Проиграл...");
+        buttonCancel.setText("Выход");
 
-        buttonOK.addActionListener(e -> onOK());
-
-        buttonCancel.addActionListener(e -> onCancel());
+        buttonCancel.addActionListener(e -> System.exit(0));
     }
 
-    private void onOK() {
-        new MainWindow().onOK();
-        dispose();
-    }
-
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
-    }
-
-    static void run(String s) {
-        Regame dialog = new Regame(s);
+    static void run() {
+        Regame dialog = new Regame();
         dialog.pack();
         dialog.setVisible(true);
     }
