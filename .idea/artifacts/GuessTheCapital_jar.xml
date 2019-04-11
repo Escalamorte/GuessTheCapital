@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="GuessTheCapital:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/GuessTheCapital_jar</output-path>
-    <root id="archive" name="GuessTheCapital.jar">
-      <element id="module-output" name="GuessTheCapital" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/jsoup-1.11.3.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>
