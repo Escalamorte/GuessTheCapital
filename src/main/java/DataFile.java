@@ -32,6 +32,7 @@ public class DataFile extends Thread {
 
     private void setData() {
         String countries;
+        int counter = 0;
         try {
             if (data.exists()) {
                 FileReader fr = new FileReader(fullName);
@@ -45,7 +46,7 @@ public class DataFile extends Thread {
                         for (Element table : doc.select("table[id=sort-table]")) {
                             for (Element row : table.select("tr:gt(0)")) {
                                 Elements tds = row.select("td:not(rowspan)");
-                                countries = tds.get(0).text() + ";" + tds.get(1).text();
+                                countries = (++counter) + ";" + tds.get(0).text() + ";" + tds.get(1).text();
                                 System.out.println(countries);
                                 fw.write(countries + "\n");
                             }
@@ -68,7 +69,7 @@ public class DataFile extends Thread {
         }
     }
 
-    private static int LineCount(){
+    static int LineCount(){
         int lineCount = 0;
         try{
             FileReader fr = new FileReader(fullName);

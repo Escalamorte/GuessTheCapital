@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainWindow extends JDialog {
@@ -10,11 +11,12 @@ public class MainWindow extends JDialog {
     private JButton buttonOK;
     private JLabel countryTitleLabel, capitalTitleLabel, globeTitleLabel;
     private JLabel guessedCountryLabel, guessedCapitalLabel, lifeRemainingLabel, lifeRemainingField;
-    private JLabel mainLabel;
+    private JLabel mainLabel, guessedCountTitle, guessedCountLabel;
     private JPanel guessPanel;
-    private JLabel guessedCountTitle;
-    private JLabel guessedCountLabel;
+    private String country;
     private String capital;
+    private int countryNumber;
+    private ArrayList<Integer> rightAnswersArr = new ArrayList<>();
     private int life = 5;
     private char[] rightLetters;
     private Timer timer;
@@ -22,17 +24,17 @@ public class MainWindow extends JDialog {
 
     private MainWindow() {
         guessPanel.setVisible(false);
+        setContentPane(contentPane);
+        setModal(true);
+        getRootPane().setDefaultButton(buttonOK);
+
         setTitle("Guess The Capital");
         mainLabel.setText("Угадай столицу!");
         countryTitleLabel.setText("Страна");
         capitalTitleLabel.setText("Столица");
-        setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+
         lifeRemainingLabel.setText("Попыток отсталось");
         guessedCountTitle.setText("Количество отгаданных");
-
-
 
         buttonOK.setText("Поехали!");
         buttonOK.addActionListener(e -> onOK());
@@ -52,12 +54,16 @@ public class MainWindow extends JDialog {
 
     private void onOK() {
         guessPanel.setVisible(true);
+        try {
+            String[] countryArr = DataFile.getCountry().split(";");
+            countryNumber = Integer.parseInt(countryArr[0]);
+            country = countryArr[1];
+            capital = countryArr[2];
+        } catch (ArrayIndexOutOfBoundsException exp) {
+            System.out.println(exp.getMessage());
+        }
 
-        String[] countryArr = DataFile.getCountry().split(";");
-        String country = countryArr[0];
-        capital = countryArr[1];
-
-        guessedCountLabel.setText(String.valueOf(guessedCount));
+        guessedCountLabel.setText(guessedCount + "/" + DataFile.LineCount());
         rightLetters = new char[capital.length()];
         guessedCountryLabel.setText(country);
 
@@ -68,6 +74,7 @@ public class MainWindow extends JDialog {
         guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()));
 
         setGlobalImage(country);
+
     }
 
     private void checkAnswer(char ch) {
@@ -103,6 +110,8 @@ public class MainWindow extends JDialog {
         }
 
         if(!regame){
+            rightAnswersArr.add(countryNumber);
+
             ++life;
             guessedCount++;
             rightAnswer();
