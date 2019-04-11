@@ -45,21 +45,21 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="706d9" class="javax.swing.JLabel" binding="mainTitleLabel">
+              <component id="a367b" class="javax.swing.JLabel" binding="globeTitleLabel">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font name="Century Gothic" size="48" style="1"/>
+                  <icon value="images/globe.gif"/>
                   <text value=""/>
                 </properties>
               </component>
-              <component id="a367b" class="javax.swing.JLabel" binding="globeTitleLabel">
+              <component id="5dd09" class="javax.swing.JLabel" binding="mainLabel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <icon value="images/globe.gif"/>
+                  <font name="Century Gothic" size="48" style="1"/>
                   <text value=""/>
                 </properties>
               </component>
@@ -77,7 +77,9 @@
             <children>
               <component id="251ee" class="javax.swing.JLabel" binding="countryTitleLabel">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                    <preferred-size width="156" height="0"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <font name="Century Gothic" size="18" style="1"/>
@@ -86,7 +88,9 @@
               </component>
               <component id="b4765" class="javax.swing.JLabel" binding="capitalTitleLabel">
                 <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                    <preferred-size width="156" height="0"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <font name="Century Gothic" size="18" style="1"/>

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.Locale;
@@ -7,8 +8,9 @@ public class MainWindow extends JDialog {
 
     private JPanel contentPane;
     private JButton buttonOK;
-    private JLabel mainTitleLabel, countryTitleLabel, capitalTitleLabel, globeTitleLabel;
+    private JLabel countryTitleLabel, capitalTitleLabel, globeTitleLabel;
     private JLabel guessedCountryLabel, guessedCapitalLabel, lifeRemainingLabel, lifeRemainingField;
+    private JLabel mainLabel;
     private String capital;
     private int life = 5;
     private char[] rightLetters;
@@ -16,7 +18,8 @@ public class MainWindow extends JDialog {
 
     private MainWindow() {
         setTitle("Guess The Capital");
-        mainTitleLabel.setText("Угадай столицу!");
+        mainLabel.setText("Угадай столицу!");
+        //mainTitleLabel.setText(" ");
         countryTitleLabel.setText("Страна");
         capitalTitleLabel.setText("Столица");
         setContentPane(contentPane);
@@ -49,6 +52,8 @@ public class MainWindow extends JDialog {
         guessedCountryLabel.setText(country);
 
         lifeRemainingField.setText(String.valueOf(life));
+
+        buttonOK.setText("Пропустить");
 
         guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()));
 
@@ -122,7 +127,12 @@ public class MainWindow extends JDialog {
     }
 
     private void rightAnswer(){
-        mainTitleLabel.setText("Правильно!");
+        String correctImage = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\" + File.separator + "correct.png";
+        ImageIcon ic = new ImageIcon(new ImageIcon(correctImage).getImage().getScaledInstance(20,25, Image.SCALE_DEFAULT));
+        buttonOK.setIcon(ic);
+
+        buttonOK.setText("Правильно!");
+
         timer = new Timer(0, e -> {
             int sec = 50000;
             while (sec > 0){
@@ -130,7 +140,9 @@ public class MainWindow extends JDialog {
                 System.out.println(sec);
             }
             timer.stop();
-            mainTitleLabel.setText("Угадай столицу!");
+            buttonOK.setText("Пропустить");
+            buttonOK.setIcon(null);
+            buttonOK.setBackground(null);
             onOK();
         });
         timer.start();
@@ -138,6 +150,7 @@ public class MainWindow extends JDialog {
 
     public static void main(String[] args) {
         MainWindow dialog = new MainWindow();
+        dialog.setSize(600, 450);
         dialog.pack();
         new DataFile().run();
         dialog.setVisible(true);
