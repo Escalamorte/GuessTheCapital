@@ -11,21 +11,28 @@ public class MainWindow extends JDialog {
     private JLabel countryTitleLabel, capitalTitleLabel, globeTitleLabel;
     private JLabel guessedCountryLabel, guessedCapitalLabel, lifeRemainingLabel, lifeRemainingField;
     private JLabel mainLabel;
+    private JPanel guessPanel;
+    private JLabel guessedCountTitle;
+    private JLabel guessedCountLabel;
     private String capital;
     private int life = 5;
     private char[] rightLetters;
     private Timer timer;
+    private int guessedCount;
 
     private MainWindow() {
+        guessPanel.setVisible(false);
         setTitle("Guess The Capital");
         mainLabel.setText("Угадай столицу!");
-        //mainTitleLabel.setText(" ");
         countryTitleLabel.setText("Страна");
         capitalTitleLabel.setText("Столица");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         lifeRemainingLabel.setText("Попыток отсталось");
+        guessedCountTitle.setText("Количество отгаданных");
+
+
 
         buttonOK.setText("Поехали!");
         buttonOK.addActionListener(e -> onOK());
@@ -40,14 +47,17 @@ public class MainWindow extends JDialog {
                 }
             }
         });
+
     }
 
     private void onOK() {
+        guessPanel.setVisible(true);
 
         String[] countryArr = DataFile.getCountry().split(";");
         String country = countryArr[0];
         capital = countryArr[1];
 
+        guessedCountLabel.setText(String.valueOf(guessedCount));
         rightLetters = new char[capital.length()];
         guessedCountryLabel.setText(country);
 
@@ -94,6 +104,7 @@ public class MainWindow extends JDialog {
 
         if(!regame){
             ++life;
+            guessedCount++;
             rightAnswer();
         }
     }
@@ -128,10 +139,11 @@ public class MainWindow extends JDialog {
 
     private void rightAnswer(){
         String correctImage = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\" + File.separator + "correct.png";
-        ImageIcon ic = new ImageIcon(new ImageIcon(correctImage).getImage().getScaledInstance(20,25, Image.SCALE_DEFAULT));
+        ImageIcon ic = new ImageIcon(new ImageIcon(correctImage).getImage().getScaledInstance(22,27, Image.SCALE_DEFAULT));
         buttonOK.setIcon(ic);
 
-        buttonOK.setText("Правильно!");
+        //buttonOK.setText("Правильно!");
+        buttonOK.setText("");
 
         timer = new Timer(0, e -> {
             int sec = 50000;
@@ -150,7 +162,7 @@ public class MainWindow extends JDialog {
 
     public static void main(String[] args) {
         MainWindow dialog = new MainWindow();
-        dialog.setSize(600, 450);
+
         dialog.pack();
         new DataFile().run();
         dialog.setVisible(true);
