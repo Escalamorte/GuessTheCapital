@@ -53,7 +53,6 @@ public class MainWindow extends JDialog {
         guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()));
 
         setGlobalImage(country);
-
     }
 
     private void checkAnswer(char ch) {

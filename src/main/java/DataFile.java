@@ -103,7 +103,6 @@ public class DataFile extends Thread {
             } catch (IOException exp) {
                 System.out.println(exp.getMessage());
             }
-
         return country;
     }
 
