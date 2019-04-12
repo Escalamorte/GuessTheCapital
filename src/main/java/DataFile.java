@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class DataFile extends Thread {
 
     private static String fileName = "data.txt";
-    private static String dir = System.getProperty("user.dir");
-    private static String fullName = dir + "\\src\\main\\resources" + File.separator + fileName;
+    private static String dir = System.getProperty("user.dir") + "\\src\\main\\resources" + File.separator;
+    private static String fullName = dir + fileName;
     private static File data = new File(fullName);
 
     private void createFile() {

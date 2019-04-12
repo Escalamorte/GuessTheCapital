@@ -21,8 +21,10 @@ public class MainWindow extends JDialog {
     private char[] rightLetters;
     private Timer timer;
     private int guessedCount;
+    private AudioPlay audioPlay = new AudioPlay();
 
     private MainWindow() {
+
         guessPanel.setVisible(false);
         setContentPane(contentPane);
         setModal(true);
@@ -89,6 +91,7 @@ public class MainWindow extends JDialog {
                             }
                         }
                     } else {
+                        audioPlay.wrongAnswer();
                         lifeRemainingField.setText(String.valueOf(--life));
                         if (life == 0) {
                             Regame.run();
@@ -111,7 +114,7 @@ public class MainWindow extends JDialog {
 
         if(!regame){
             rightAnswersArr.add(countryNumber);
-
+            audioPlay.correctAnswer();
             ++life;
             guessedCount++;
             rightAnswer();
