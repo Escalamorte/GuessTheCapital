@@ -3,6 +3,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ public class DataFile extends Thread {
     private static String dir = System.getProperty("user.dir") + "\\src\\main\\resources" + File.separator;
     private static String fullName = dir + fileName;
     private static File data = new File(fullName);
+    private static MainWindow mw = new MainWindow();
 
     private void createFile() {
         if (!data.exists()){
@@ -96,9 +98,10 @@ public class DataFile extends Thread {
                 Random random = new Random();
                 int lineNumber = random.nextInt(LineCount()) + 1;
                 System.out.println(lineNumber);
-                    for (int i = 0; i < lineNumber; i++) {
-                        country = scan.nextLine();
-                    }
+
+                for (int i = 0; i < lineNumber; i++) {
+                    country = scan.nextLine();
+                }
                 System.out.println(country);
                 fr.close();
             } catch (IOException exp) {

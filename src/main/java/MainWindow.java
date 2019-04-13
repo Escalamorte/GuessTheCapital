@@ -23,7 +23,7 @@ public class MainWindow extends JDialog {
     private int guessedCount;
     private AudioPlay audioPlay = new AudioPlay();
 
-    private MainWindow() {
+    MainWindow() {
 
         guessPanel.setVisible(false);
         setContentPane(contentPane);
@@ -170,6 +170,10 @@ public class MainWindow extends JDialog {
             onOK();
         });
         timer.start();
+    }
+
+    ArrayList getRigthAnswerNum() {
+        return rightAnswersArr;
     }
 
     public static void main(String[] args) {
