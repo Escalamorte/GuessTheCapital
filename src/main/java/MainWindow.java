@@ -176,7 +176,7 @@ public class MainWindow extends JDialog {
         MainWindow dialog = new MainWindow();
 
         dialog.pack();
-        new DataFile().run();
+        new  DataFile().start();
         dialog.setVisible(true);
         dialog.setLocationRelativeTo(null);
         System.exit(0);
