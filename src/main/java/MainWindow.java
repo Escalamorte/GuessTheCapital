@@ -71,6 +71,12 @@ public class MainWindow extends JDialog {
 
         lifeRemainingField.setText(String.valueOf(life));
 
+        if(buttonOK.getText().equals("Пропустить")) {
+            lifeRemainingField.setText(String.valueOf(--life));
+            if (life == 0) {
+                Regame.run();
+            }
+        }
         buttonOK.setText("Пропустить");
 
         guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()));
@@ -114,6 +120,7 @@ public class MainWindow extends JDialog {
 
         if(!regame){
             rightAnswersArr.add(countryNumber);
+            rightAnswersArr.forEach((i)-> System.out.println("Right answers is " + i));
             audioPlay.correctAnswer();
             ++life;
             guessedCount++;
