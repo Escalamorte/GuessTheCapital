@@ -7,11 +7,13 @@ public class Regame extends JDialog{
     private JLabel textLabel;
 
     private Regame() {
+        AudioPlay audioPlay = new AudioPlay();
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonCancel);
-        textLabel.setText("Проиграл...");
+        textLabel.setText("Game Over...");
         buttonCancel.setText("Выход");
+        audioPlay.gameOver();
 
         buttonCancel.addActionListener(e -> System.exit(0));
     }
