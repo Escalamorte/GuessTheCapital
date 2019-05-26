@@ -17,9 +17,8 @@ public class MainWindow extends JDialog {
     private String capital;
     private int countryNumber;
     private ArrayList<Integer> rightAnswersArr = new ArrayList<>();
-    private int life = 5;
+    private int life;
     private char[] rightLetters;
-    private Timer timer;
     private int guessedCount;
     private AudioPlay audioPlay = new AudioPlay();
 
@@ -28,7 +27,6 @@ public class MainWindow extends JDialog {
         guessPanel.setVisible(false);
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
 
         setTitle("Guess The Capital");
         mainLabel.setText("Угадай столицу!");
@@ -40,8 +38,6 @@ public class MainWindow extends JDialog {
 
         buttonOK.setText("Поехали!");
         buttonOK.addActionListener(e -> onOK());
-        contentPane.getInputContext().selectInputMethod(new Locale("ru", "RU"));
-
         buttonOK.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -52,9 +48,37 @@ public class MainWindow extends JDialog {
             }
         });
 
+        contentPane.getInputContext().selectInputMethod(new Locale("ru", "RU"));
+
+    }
+
+    void startNewGame() {
+        guessPanel.setVisible(false);
+        setContentPane(contentPane);
+        setModal(true);
+        buttonOK.setText("Поехали!");
     }
 
     private void onOK() {
+        if(buttonOK.getText().equals("Пропустить") && life > 0) {
+            lifeRemainingField.setText(String.valueOf(--life));
+            System.out.println("life is " + life);
+                if (life != 0) {
+                    setCountry();
+                } else {
+                    Regame.run();
+                }
+        } else {
+            life = 5;
+            guessedCount = 0;
+            setCountry();
+            lifeRemainingField.setText(String.valueOf(life)); // выводит жизни на экран
+        }
+        buttonOK.setText("Пропустить");
+    }
+
+    private void setCountry() { //выбирает страну
+
         guessPanel.setVisible(true);
         try {
             String[] countryArr = DataFile.getCountry().split(";");
@@ -65,27 +89,18 @@ public class MainWindow extends JDialog {
             System.out.println(exp.getMessage());
         }
 
-        guessedCountLabel.setText(guessedCount + "/" + DataFile.LineCount());
+        guessedCountLabel.setText(guessedCount + "/" + DataFile.LineCount()); // кол-во угаданных / всего стран
+
         rightLetters = new char[capital.length()];
-        guessedCountryLabel.setText(country);
-
-        lifeRemainingField.setText(String.valueOf(life));
-
-        if(buttonOK.getText().equals("Пропустить")) {
-            lifeRemainingField.setText(String.valueOf(--life));
-            if (life == 0) {
-                Regame.run();
-            }
-        }
-        buttonOK.setText("Пропустить");
-
         guessedCapitalLabel.setText(String.copyValueOf(hideAnswer()));
 
-        setGlobalImage(country);
+        guessedCountryLabel.setText(country); //выводит страну на экран
 
+
+        setGlobalImage(country);
     }
 
-    private void checkAnswer(char ch) {
+    private void checkAnswer(char ch) { // проверяет совпадение букв
         char[] alphabet = new char[]{'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'};
         if (life > 0) {
             for (char a : alphabet) {
@@ -109,7 +124,7 @@ public class MainWindow extends JDialog {
             Regame.run();
         }
 
-        guessedCapitalLabel.setText(String.valueOf(rightLetters).toUpperCase());
+        guessedCapitalLabel.setText(String.valueOf(rightLetters).toUpperCase()); // выводит угаданные буквы на экран
 
         boolean regame = false;
         for (char c : rightLetters) {
@@ -118,8 +133,8 @@ public class MainWindow extends JDialog {
             }
         }
 
-        if(!regame){
-            rightAnswersArr.add(countryNumber);
+        if(!regame){ // если слово угадано
+            rightAnswersArr.add(countryNumber); // добавляет в массив номер угаданной страны
             rightAnswersArr.forEach((i)-> System.out.println("Right answers is " + i));
             audioPlay.correctAnswer();
             ++life;
@@ -128,7 +143,7 @@ public class MainWindow extends JDialog {
         }
     }
 
-    private void setGlobalImage(String coun){
+    private void setGlobalImage(String coun){ // выводит флаг страны
         String flagDir = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\" + File.separator + coun + ".png";
         String globeImage = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\" + File.separator + "globe.gif";
         File file = new File(flagDir);
@@ -156,6 +171,7 @@ public class MainWindow extends JDialog {
         return rightLetters;
     }
 
+    private Timer timer;
     private void rightAnswer(){
         String correctImage = System.getProperty("user.dir") + "\\src\\main\\resources\\images\\" + File.separator + "correct.png";
         ImageIcon ic = new ImageIcon(new ImageIcon(correctImage).getImage().getScaledInstance(22,27, Image.SCALE_DEFAULT));
@@ -185,8 +201,8 @@ public class MainWindow extends JDialog {
 
     public static void main(String[] args) {
         MainWindow dialog = new MainWindow();
-
         dialog.pack();
+
         new  DataFile().start();
         dialog.setVisible(true);
         dialog.setLocationRelativeTo(null);
